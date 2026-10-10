@@ -1,0 +1,55 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>NewLife.Cube.WeCard</RootNamespace>
+    <AssemblyName>NewLife.Cube.WeCard</AssemblyName>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageOutputPath>$(MSBuildProjectDirectory)/nupkg/</PackageOutputPath>
+
+    <PackageId>NewLife.Cube.WeCard</PackageId>
+    <Version>1.0.2026.1010</Version>
+    <Authors>荒村野客</Authors>
+    <Company>NewLife</Company>
+    <Copyright>版权所有(C) 荒村野客 2026</Copyright>
+    <Description>腾讯微卡自建应用扩展 for NewLife.Cube：access_token、OAuth、通讯录、角色标签权限、电子卡/电子码、公告、支付与门禁薄封装、事件回调。不含第三方应用 /api/third*。供 MVC 宿主使用，依赖 NewLife.Cube.Core。WebApi 宿主请安装 NewLife.Cube.WeCard.WebApi。</Description>
+    <PackageTags>NewLife;Cube;魔方;微卡;WeCard;腾讯微卡</PackageTags>
+    <RepositoryUrl>https://github.com/gz-hcyk/NewLife.Cube.WeCard</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/gz-hcyk/NewLife.Cube.WeCard</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(CubeHost)' == 'WebApi'">
+    <PackageId>NewLife.Cube.WeCard.WebApi</PackageId>
+    <Description>腾讯微卡自建应用扩展 for NewLife.Cube：access_token、OAuth、通讯录、角色标签权限、电子卡/电子码、公告、支付与门禁薄封装、事件回调。不含第三方应用 /api/third*。供 WebApi 宿主使用，依赖 NewLife.Cube。MVC 宿主请安装 NewLife.Cube.WeCard。</Description>
+    <PackageTags>$(PackageTags);WebApi</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(CubeHost)' == 'WebApi'">
+    <PackageReference Include="NewLife.Cube" Version="6.15.2026.901" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(CubeHost)' != 'WebApi'">
+    <PackageReference Include="NewLife.Cube.Core" Version="6.15.2026.901" />
+  </ItemGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <Target Name="ValidateCubeHost" BeforeTargets="CollectPackageReferences;Restore;Build;Pack">
+    <Error Condition="'$(CubeHost)' != 'Mvc' and '$(CubeHost)' != 'WebApi'"
+           Text="CubeHost 只能是 Mvc 或 WebApi，当前值为 '$(CubeHost)'。" />
+  </Target>
+
+</Project>
