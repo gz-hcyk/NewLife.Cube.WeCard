@@ -1,0 +1,32 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        host: [Mvc, WebApi]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: test
+        run: dotnet test tests/WeCard.Tests/WeCard.Tests.csproj -c Release -p:CubeHost=${{ matrix.host }} --nologo
+
+  pack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: pack mvc
+        run: dotnet pack src/NewLife.Cube.WeCard/NewLife.Cube.WeCard.csproj -c Release -p:CubeHost=Mvc --nologo
+      - name: pack webapi
+        run: dotnet pack src/NewLife.Cube.WeCard/NewLife.Cube.WeCard.csproj -c Release -p:CubeHost=WebApi --nologo
